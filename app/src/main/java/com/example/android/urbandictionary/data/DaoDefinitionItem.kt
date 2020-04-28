@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface DefinitionItemDao {
+interface DaoDefinitionItem {
     @Query("Select * from definitions_table ORDER BY word ASC")
     fun getDefinitions(): LiveData<List<DefinitionItem>>
 

@@ -2,6 +2,6 @@ package com.example.android.urbandictionary.search
 
 import androidx.lifecycle.ViewModel
 
-class SearchViewModel : ViewModel() {
+class ViewModelSearch : ViewModel() {
     // TODO: Implement the ViewModel
 }

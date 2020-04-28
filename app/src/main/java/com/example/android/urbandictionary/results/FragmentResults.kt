@@ -15,7 +15,7 @@ class FragmentResults : Fragment() {
         fun newInstance() = FragmentResults()
     }
 
-    private lateinit var viewModel: ResultsViewModel
+    private lateinit var viewModelResults: ViewModelResults
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +26,7 @@ class FragmentResults : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ResultsViewModel::class.java)
+        viewModelResults = ViewModelProviders.of(this).get(ViewModelResults::class.java)
         // TODO: Use the ViewModel
     }
 

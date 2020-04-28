@@ -15,7 +15,7 @@ class FragmentSearch : Fragment() {
         fun newInstance() = FragmentSearch()
     }
 
-    private lateinit var viewModel: SearchViewModel
+    private lateinit var viewModelSearch: ViewModelSearch
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +26,7 @@ class FragmentSearch : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
+        viewModelSearch = ViewModelProviders.of(this).get(ViewModelSearch::class.java)
         // TODO: Use the ViewModel
     }
 
