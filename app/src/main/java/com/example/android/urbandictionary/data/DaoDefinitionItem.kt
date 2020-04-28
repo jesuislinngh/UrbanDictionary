@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface DaoDefinitionItem {
     @Query("Select * from definitions_table ORDER BY word ASC")
-    fun getDefinitions(): LiveData<List<DefinitionItem>>
+    suspend fun getDefinitions(): LiveData<List<DefinitionItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(definitionItem: DefinitionItem)
