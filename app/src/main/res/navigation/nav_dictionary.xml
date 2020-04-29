@@ -9,7 +9,7 @@
         android:id="@+id/fragmentSearch"
         android:name="com.example.android.urbandictionary.search.FragmentSearch"
         android:label="fragment_search_fragment"
-        tools:layout="@layout/fragment_search_fragment" >
+        tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_fragmentSearch_to_fragmentResults"
             app:destination="@id/fragmentResults" />
@@ -18,7 +18,7 @@
         android:id="@+id/fragmentResults"
         android:name="com.example.android.urbandictionary.results.FragmentResults"
         android:label="fragment_results_fragment"
-        tools:layout="@layout/fragment_results_fragment" >
+        tools:layout="@layout/fragment_results" >
         <action
             android:id="@+id/action_fragmentResults_to_fragmentDefinitionItem"
             app:destination="@id/fragmentDefinitionItem" />
