@@ -3,7 +3,7 @@
 
     <data>
         <variable
-            name="viewModel"
+            name="itemModel"
             type="com.example.android.urbandictionary.data.DefinitionItem" />
     </data>
 
@@ -23,7 +23,7 @@
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="4"
-            android:text="@{viewModel.definition}" />
+            android:text="@{itemModel.definition}" />
 
         <TextView
             android:id="@+id/textView"
@@ -35,7 +35,7 @@
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="4dp"
             android:drawableTop="@drawable/ic_thumb_up_white_24dp"
-            android:text="@{viewModel.thumbs_up}"
+            android:text="@{itemModel.thumbs_up}"
             android:textAlignment="center"/>
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="4dp"
             android:drawableTop="@drawable/ic_thumb_down_white_24dp"
-            android:text="@{viewModel.thumbs_down}"
+            android:text="@{itemModel.thumbs_down}"
             android:textAlignment="center" />
     </LinearLayout>
 </layout>
