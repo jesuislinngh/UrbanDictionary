@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_dictionary.xml"
     app:startDestination="@id/fragmentSearch">
 
     <fragment
@@ -10,18 +9,14 @@
         android:name="com.example.android.urbandictionary.search.FragmentSearch"
         android:label="fragment_search_fragment"
         tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_fragmentSearch_to_fragmentResults"
-            app:destination="@id/fragmentResults" />
+        <action android:id="@+id/results" app:destination="@id/fragmentResults" />
     </fragment>
     <fragment
         android:id="@+id/fragmentResults"
         android:name="com.example.android.urbandictionary.results.FragmentResults"
         android:label="fragment_results_fragment"
         tools:layout="@layout/fragment_results" >
-        <action
-            android:id="@+id/action_fragmentResults_to_fragmentDefinitionItem"
-            app:destination="@id/fragmentDefinitionItem" />
+        <action android:id="@+id/single" app:destination="@id/fragmentDefinitionItem" />
     </fragment>
     <fragment
         android:id="@+id/fragmentDefinitionItem"
