@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.fireguard.android.myurbandictionarysampleapp.DefinitionItem" />
+            type="com.example.android.urbandictionary.data.DefinitionItem" />
     </data>
 
 
@@ -18,12 +18,12 @@
             android:id="@+id/textView3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
             android:layout_marginStart="2dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="4dp"
-            android:text="@{viewModel.definition}"/>
+            android:layout_weight="4"
+            android:text="@{viewModel.definition}" />
 
         <TextView
             android:id="@+id/textView"
@@ -34,7 +34,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="4dp"
-            android:drawableTop="@drawable/baseline_thumb_up_24"
+            android:drawableTop="@drawable/ic_thumb_up_white_24dp"
             android:text="@{viewModel.thumbs_up}"
             android:textAlignment="center"/>
 
@@ -47,7 +47,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="4dp"
-            android:drawableTop="@drawable/baseline_thumb_down_24"
+            android:drawableTop="@drawable/ic_thumb_down_white_24dp"
             android:text="@{viewModel.thumbs_down}"
             android:textAlignment="center" />
     </LinearLayout>
