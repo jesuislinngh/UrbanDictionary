@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">UrbanDictionary</string>
+    <string name="edit_message">Enter a word to search</string>
+    <string name="button_send">Search</string>
 </resources>
