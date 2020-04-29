@@ -11,6 +11,8 @@ import com.example.android.urbandictionary.R
 
 class FragmentDefinitionItem : Fragment() {
 
+    private val TAG =  FragmentDefinitionItem::class.java.canonicalName
+
     companion object {
         fun newInstance() = FragmentDefinitionItem()
     }
