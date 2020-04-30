@@ -3,4 +3,5 @@
     <string name="edit_message">Enter a word to search</string>
     <string name="button_send">Search</string>
     <string name="clear_search">Clear</string>
+    <string name="no_term">"no term to look for"</string>
 </resources>
