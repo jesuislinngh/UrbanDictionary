@@ -1,5 +1,6 @@
 package com.example.android.urbandictionary.search
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,15 +22,17 @@ class ViewModelSearch(private val repository: RepositoryDefinitions) : ViewModel
         val FACTORY = singleArgViewModelFactory(::ViewModelSearch)
     }
 
-    /**
-     * Request a snackbar to display a string.
-     */
-    private val _snackBar = MutableLiveData<String?>()
+    private val noTermError: String = "Term not found, try another one"
 
     /**
      * Request a snackbar to display a string.
      */
-    val snackbar: LiveData<String?>
+    private val _snackBar = MutableLiveData<String>()
+
+    /**
+     * Request a snackbar to display a string.
+     */
+    val snackbar: LiveData<String>
         get() = _snackBar
 
     private val _searching = MutableLiveData(false)
@@ -40,13 +43,13 @@ class ViewModelSearch(private val repository: RepositoryDefinitions) : ViewModel
     val searching: LiveData<Boolean>
         get() = _searching
 
-    fun getDefinition(term: String, resume: (error: Boolean) -> Unit) {
+    fun getDefinition(term: String, resume: () -> Unit) {
 
-        if (term.length < 1) {
-            resume(false)
+        if (term.length < 2) {
+            _snackBar.value = noTermError
         } else {
             startProcess { repository.getWordDefinition(term) }
-            resume(true)
+            resume()
         }
 
     }
