@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 
@@ -29,6 +28,8 @@ class FragmentSearch : Fragment() {
 
     private lateinit var viewModel: ViewModelSearch
     private lateinit var imm: InputMethodManager
+    private lateinit var editText: EditText
+    private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,40 +55,65 @@ class FragmentSearch : Fragment() {
 
         view.findViewById<Button>(R.id.send).setOnClickListener { searchTerm(view) }
 
-        val editText = view.findViewById<EditText>(R.id.editText)
+        editText = view.findViewById<EditText>(R.id.editText)
+        imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED)
+        editText.requestFocus()
+
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
-        val nameObserver = Observer<Boolean> { value ->
+        val searchObserver = Observer<Boolean> { value ->
             value.let { searching ->
                 editText.isEnabled = !searching
                 progressBar.visibility = if (searching) View.VISIBLE else View.GONE
+                menu?.findItem(R.id.clear)?.isEnabled = !searching
             }
         }
 
-        viewModel.searching.observe(viewLifecycleOwner, nameObserver)
+        viewModel.searching.observe(viewLifecycleOwner, searchObserver)
+
+        val snackbarObserver = Observer<String> { value ->
+            getView()?.let {
+                Snackbar.make(it, value, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.snackbar.observe(viewLifecycleOwner, snackbarObserver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)
+        val item = menu.findItem(R.id.clear)
+        item.isEnabled = false
+        this.menu = menu
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.clear -> {
+            // User chose the "Settings" item, show the app settings UI...
+            Log.d(TAG, "clear")
+            editText?.text.clear()
+            true
+        } else -> {
+            true
+        }
+    }
+
     fun searchTerm(view: View) {
-        val editText = getView()?.findViewById<EditText>(R.id.editText)
         val term = editText?.text.toString()
 
         imm.hideSoftInputFromWindow(editText?.windowToken, 0)
 
-        if (term.length > 1) {
-            Log.d(TAG, "we got here searching...")
-            viewModel.getDefinition(term) {
-                findNavController()?.navigate(R.id.fragmentResults)
-            }
-
-        } else {
-            getView()?.let {
-                Snackbar.make(it, getString(R.string.no_term), Snackbar.LENGTH_SHORT).show()
-            }
+        viewModel.getDefinition(term) {
+            findNavController()?.navigate(R.id.fragmentResults)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        imm.hideSoftInputFromWindow(editText?.windowToken, 0)
+
     }
 }
