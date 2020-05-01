@@ -33,13 +33,13 @@ abstract class DataBaseDefinitions : RoomDatabase() {
                     context.applicationContext,
                     DataBaseDefinitions::class.java,
                     DATABASE_NAME
-                ).addCallback(WordDatabaseCallback(scope)).build()
+                ).addCallback(DatabaseDefinitionCallback(scope)).build()
             }
         }
 
     }
 
-    private class WordDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
+    private class DatabaseDefinitionCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
 
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
