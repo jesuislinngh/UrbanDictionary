@@ -1,17 +1,21 @@
 package com.example.android.urbandictionary.search
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.android.urbandictionary.data.DataBaseDefinitions
 import com.example.android.urbandictionary.data.NetworkRequestError
 import com.example.android.urbandictionary.data.RepositoryDefinitions
 import com.example.android.urbandictionary.utils.singleArgViewModelFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ViewModelSearch(private val repository: RepositoryDefinitions) : ViewModel() {
+/*
+* This ViewModel is intended to be shared between several screens
+* */
+class ViewModelSearch(application: Application) : AndroidViewModel(application) {
+
+    private var repository: RepositoryDefinitions
+
     companion object {
 
         /**
@@ -20,6 +24,12 @@ class ViewModelSearch(private val repository: RepositoryDefinitions) : ViewModel
          * @param repository the repository to pass to [ViewModelSearch]
          */
         val FACTORY = singleArgViewModelFactory(::ViewModelSearch)
+    }
+
+
+    init {
+        val daoDefinition = DataBaseDefinitions.getDatabase(application, viewModelScope).daoDefinition()
+        repository = RepositoryDefinitions(daoDefinition)
     }
 
     private val noTermError: String = "Term not found, try another one"
@@ -43,7 +53,7 @@ class ViewModelSearch(private val repository: RepositoryDefinitions) : ViewModel
     val searching: LiveData<Boolean>
         get() = _searching
 
-    fun getDefinition(term: String, resume: () -> Unit) {
+    fun getDefinitions(term: String, resume: () -> Unit) {
 
         if (term.length < 2) {
             _snackBar.value = noTermError
