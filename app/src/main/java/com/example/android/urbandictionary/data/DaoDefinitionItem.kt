@@ -8,11 +8,17 @@ import androidx.room.Query
 
 @Dao
 interface DaoDefinitionItem {
-    @Query("Select * from definitions_table ORDER BY word ASC")
-    suspend fun getDefinitions(): LiveData<List<DefinitionItem>>
+    @Query("SELECT * FROM definitions_table WHERE word = :word ORDER BY word ASC")
+    suspend fun getDefinitions(word: String): LiveData<List<DefinitionItem>>
+
+    @Query("SELECT * FROM definitions_table WHERE word = :word AND defid = :defid ORDER BY word ASC")
+    suspend fun getDefinition(word: String, defid: Int): LiveData<List<DefinitionItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(definitionItem: DefinitionItem)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(definitions: List<DefinitionItem>)
 
     @Query("DELETE FROM definitions_table")
     suspend fun deleteAll()
