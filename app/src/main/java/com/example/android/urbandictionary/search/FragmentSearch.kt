@@ -1,5 +1,6 @@
 package com.example.android.urbandictionary.search
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -14,17 +15,11 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 
 import com.example.android.urbandictionary.R
-import com.example.android.urbandictionary.data.RepositoryDefinitions
 import com.google.android.material.snackbar.Snackbar
 
 class FragmentSearch : Fragment() {
 
     private val TAG = FragmentSearch::class.java.canonicalName
-
-    companion object {
-
-        fun newInstance() = FragmentSearch()
-    }
 
     private lateinit var viewModel: ViewModelSearch
     private lateinit var imm: InputMethodManager
@@ -48,14 +43,16 @@ class FragmentSearch : Fragment() {
 
         imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        val repository = RepositoryDefinitions()
         viewModel = ViewModelProviders
-            .of(this, ViewModelSearch.FACTORY(repository))
+            .of(
+                this,
+                ViewModelSearch.FACTORY(Application())
+            )
             .get(ViewModelSearch::class.java)
 
-        view.findViewById<Button>(R.id.send).setOnClickListener { searchTerm(view) }
+        view.findViewById<Button>(R.id.send).setOnClickListener { searchTerm() }
 
-        editText = view.findViewById<EditText>(R.id.editText)
+        editText = view.findViewById(R.id.editText)
         imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED)
         editText.requestFocus()
 
@@ -93,27 +90,27 @@ class FragmentSearch : Fragment() {
         R.id.clear -> {
             // User chose the "Settings" item, show the app settings UI...
             Log.d(TAG, "clear")
-            editText?.text.clear()
+            editText.text.clear()
             true
         } else -> {
             true
         }
     }
 
-    fun searchTerm(view: View) {
-        val term = editText?.text.toString()
+    private fun searchTerm() {
+        val term = editText.text.toString()
 
-        imm.hideSoftInputFromWindow(editText?.windowToken, 0)
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
 
-        viewModel.getDefinition(term) {
-            findNavController()?.navigate(R.id.fragmentResults)
+        viewModel.getDefinitions(term) {
+            findNavController().navigate(R.id.fragmentResults)
         }
     }
 
     override fun onPause() {
         super.onPause()
 
-        imm.hideSoftInputFromWindow(editText?.windowToken, 0)
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
 
     }
 }
