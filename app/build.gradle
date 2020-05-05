@@ -37,6 +37,11 @@ android {
         experimental = true
     }
 
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
 }
 
 dependencies {
@@ -68,8 +73,10 @@ dependencies {
 
     // Retrofit Coroutines Support
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
-    implementation 'androidx.room:room-runtime:2.2.5'
-    annotationProcessor 'androidx.room:room-compiler:2.2.5'
+    // Room components
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    androidTestImplementation "androidx.room:room-testing:$roomVersion"
 
     // Kotlin
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
@@ -81,4 +88,8 @@ dependencies {
 
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation "androidx.work:work-runtime-ktx:$workVersion"
 }
