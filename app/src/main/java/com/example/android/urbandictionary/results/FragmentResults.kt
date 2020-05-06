@@ -1,5 +1,6 @@
 package com.example.android.urbandictionary.results
 
+import android.app.Application
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
@@ -9,32 +10,29 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.example.android.urbandictionary.databinding.FragmentResultsBinding
+import com.example.android.urbandictionary.search.ViewModelSearch
 
 class FragmentResults : Fragment() {
 
     private val TAG =  FragmentResults::class.java.canonicalName
 
-    private val viewModel: ViewModelResults by lazy {
-        ViewModelProviders.of(this).get(ViewModelResults::class.java)
-    }
+    private lateinit var viewModel: ViewModelSearch
 
-    companion object {
-        fun newInstance() = FragmentResults()
-    }
-
-    private lateinit var viewModelResults: ViewModelResults
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModelResults = ViewModelProviders.of(this).get(ViewModelResults::class.java)
-        // TODO: Use the ViewModel
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        viewModel = ViewModelProviders
+            .of(
+                requireActivity(),
+                ViewModelSearch.FACTORY(requireContext().applicationContext as Application)
+            )
+            .get(ViewModelSearch::class.java)
+
         val binding = FragmentResultsBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
         binding.definitionList.adapter =
             AdapterDefinitionResults(AdapterDefinitionResults.OnClickListener {
             Log.d(TAG, "We got here...")
