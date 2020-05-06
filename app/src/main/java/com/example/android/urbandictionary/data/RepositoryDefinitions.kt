@@ -1,23 +1,43 @@
 package com.example.android.urbandictionary.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 
-class RepositoryDefinitions(private val daoDefinitions: DaoDefinitionItem) {
+
+class RepositoryDefinitions(private val daoDefinitions: DaoDefinitionItem) : RemoteSourceDefinitions {
 
     private val TAG = RepositoryDefinitions::class.java.canonicalName
 
-    suspend fun getWordDefinition(term: String) {
-        // interact with *blocking* network and IO calls from a coroutine
-        try {
-            // Make network request using a blocking call
-            /*val result =  withTimeout(5_000) {
-                network.fetchNextTitle()
-            } */
-            //titleDao.insertTitle(Title(result.toString()))
-            Log.d(TAG, "we got here, simulating a network request...")
-        } catch (cause: Throwable) {
-            // If the network throws an exception, inform the caller
-            throw NetworkRequestError("Unable to refresh title", cause)
+    suspend fun getTermDefinitions(term: String): List<DefinitionItem>? {
+
+        val definitions: LiveData<List<DefinitionEntity>>? = daoDefinitions.getDefinitions(term)
+
+        return if (definitions == null || definitions.value == null) {
+            getDefinitions(term)
+        } else {
+            val definitionItems = mutableListOf<DefinitionItem>()
+
+            definitions.value?.forEach {
+                definitionItems.add(it.toDefinitionItem())
+            }
+
+            definitionItems
+        }
+
+    }
+
+    override suspend fun getDefinitions(term: String) : List<DefinitionItem> {
+        val getTermsDeferred = DictionaryApi.retrofitService.getTermAsync(term)
+        return try {
+            // this will run on a thread managed by Retrofit
+            val listResult = getTermsDeferred.await()
+            Log.d(TAG, "we got a list from the server: ${listResult.list.size}")
+
+            listResult.list
+
+        } catch (e: Exception) {
+            Log.d(TAG, "Stacktrace", e)
+            emptyList()
         }
     }
 }

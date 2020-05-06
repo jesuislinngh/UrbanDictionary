@@ -1,11 +1,12 @@
 package com.example.android.urbandictionary.search
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
-import com.example.android.urbandictionary.data.DataBaseDefinitions
-import com.example.android.urbandictionary.data.NetworkRequestError
-import com.example.android.urbandictionary.data.RepositoryDefinitions
+import com.example.android.urbandictionary.data.*
 import com.example.android.urbandictionary.utils.singleArgViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -14,7 +15,15 @@ import kotlinx.coroutines.launch
 * */
 class ViewModelSearch(application: Application) : AndroidViewModel(application) {
 
+    private val TAG = ViewModelSearch::class.java.canonicalName
+
     private var repository: RepositoryDefinitions
+
+    // Create a Coroutine scope using a job to be able to cancel when needed
+    //private var viewModelJob = Job()
+
+    // the Coroutine runs using the Main (UI) dispatcher
+    //private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     companion object {
 
@@ -53,17 +62,30 @@ class ViewModelSearch(application: Application) : AndroidViewModel(application) 
     val searching: LiveData<Boolean>
         get() = _searching
 
-    fun getDefinitions(term: String, resume: () -> Unit) {
+    // Internally, we use a MutableLiveData, because we will be updating the List of MarsProperty
+    // with new values
+    private val _definitions = MutableLiveData<List<DefinitionItem>>()
 
+    // The external LiveData interface to the property is immutable, so only this class can modify
+    val definitions: LiveData<List<DefinitionItem>>
+        get() = _definitions
+
+
+    fun getDefinitions(term: String, resume: () -> Unit) {
         if (term.length < 2) {
             _snackBar.value = noTermError
         } else {
-            startProcess { repository.getWordDefinition(term) }
-            resume()
-        }
+            startProcess {
+                _definitions.value = repository.getTermDefinitions(term)
 
+                if (!_definitions.value?.isEmpty()!!) resume() else {
+                    _snackBar.value = noTermError
+                }
+            }
+        }
     }
 
+    // this is a repetitive task
     private fun startProcess(block: suspend () -> Unit) : Job {
         return viewModelScope.launch {
             try {
