@@ -33,7 +33,7 @@ abstract class DataBaseDefinitions : RoomDatabase() {
                     context.applicationContext,
                     DataBaseDefinitions::class.java,
                     DATABASE_NAME
-                ).addCallback(DatabaseDefinitionCallback(scope)).build()
+                ).build()
             }
         }
 
