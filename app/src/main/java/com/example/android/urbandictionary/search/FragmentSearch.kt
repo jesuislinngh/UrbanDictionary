@@ -46,7 +46,7 @@ class FragmentSearch : Fragment() {
         viewModel = ViewModelProviders
             .of(
                 this,
-                ViewModelSearch.FACTORY(Application())
+                ViewModelSearch.FACTORY(requireContext().applicationContext as Application)
             )
             .get(ViewModelSearch::class.java)
 
