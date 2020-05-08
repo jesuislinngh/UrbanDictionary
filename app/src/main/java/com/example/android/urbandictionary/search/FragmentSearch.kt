@@ -45,10 +45,11 @@ class FragmentSearch : Fragment() {
 
         viewModel = ViewModelProviders
             .of(
-                this,
+                requireActivity(),
                 ViewModelSearch.FACTORY(requireContext().applicationContext as Application)
             )
             .get(ViewModelSearch::class.java)
+
 
         view.findViewById<Button>(R.id.send).setOnClickListener { searchTerm() }
 
