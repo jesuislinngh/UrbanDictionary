@@ -1,17 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ActivityMain"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/textView5"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.android.urbandictionary.search.ViewModelSearch" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Holder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/screen_padding"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingStart="@dimen/screen_padding"
+        android:orientation="vertical"
+        tools:context=".ActivityMain">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/screen_padding"
+            android:text="@{viewModel.definition.word}"
+            android:textStyle="bold"
+            tools:text="Word"/>
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/example_padding"
+            android:text="@{viewModel.definition.author}"
+            tools:text="author"/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/example_padding"
+            android:text="@{viewModel.definition.written_on}"
+            tools:text="Written on"/>
+
+        <TextView
+            android:id="@+id/link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/example_padding"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@{viewModel.definition.permalink}"
+            tools:text="Permanent link" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/example_padding">
+
+            <TextView
+                android:id="@+id/thumbs_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_thumb_up_alt_black_36dp"
+                android:text="@{viewModel.definition.thumbs_up}"
+                android:textAlignment="center"
+                tools:text="0" />
+
+            <TextView
+                android:id="@+id/thumbs_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_thumb_down_alt_black_36dp"
+                android:text="@{viewModel.definition.thumbs_down}"
+                android:textAlignment="center"
+                tools:text="0" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/example_padding"
+            android:fillViewport="true">
+            <LinearLayout
+                android:id="@+id/sounds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/example_padding">
+
+                <TextView
+                    android:id="@+id/definition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/example_padding"
+                    android:text="@{viewModel.definition.definition}"
+                    tools:text="Definition" />
+
+                <TextView
+                    android:id="@+id/example"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/example_padding"
+                    android:text="@{viewModel.definition.example}"
+                    android:textStyle="italic"
+                    tools:text="@string/loremhipsum"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>
