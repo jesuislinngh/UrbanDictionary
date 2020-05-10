@@ -19,16 +19,14 @@ import com.google.android.material.snackbar.Snackbar
 
 class FragmentSearch : Fragment() {
 
-    private val TAG = FragmentSearch::class.java.canonicalName
-
     private lateinit var viewModel: ViewModelSearch
     private lateinit var imm: InputMethodManager
     private lateinit var editText: EditText
-    private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(
@@ -42,6 +40,8 @@ class FragmentSearch : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        requireActivity().invalidateOptionsMenu()
 
         viewModel = ViewModelProviders
             .of(
@@ -63,7 +63,6 @@ class FragmentSearch : Fragment() {
             value.let { searching ->
                 editText.isEnabled = !searching
                 progressBar.visibility = if (searching) View.VISIBLE else View.GONE
-                menu?.findItem(R.id.clear)?.isEnabled = !searching
             }
         }
 
@@ -80,17 +79,11 @@ class FragmentSearch : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)
-        val item = menu.findItem(R.id.clear)
-        item.isEnabled = false
-        this.menu = menu
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.clear -> {
-            // User chose the "Settings" item, show the app settings UI...
-            Log.d(TAG, "clear")
             editText.text.clear()
             true
         } else -> {
