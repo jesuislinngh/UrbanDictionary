@@ -2,6 +2,8 @@ package com.example.android.urbandictionary.data
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class RepositoryDefinitions(private val daoDefinitions: DaoDefinitionItem) : RemoteSourceDefinitions {
@@ -13,15 +15,11 @@ class RepositoryDefinitions(private val daoDefinitions: DaoDefinitionItem) : Rem
         val definitions: LiveData<List<DefinitionEntity>>? = daoDefinitions.getDefinitions(term)
 
         return if (definitions == null || definitions.value == null) {
-            getDefinitions(term)
-        } else {
-            val definitionItems = mutableListOf<DefinitionItem>()
-
-            definitions.value?.forEach {
-                definitionItems.add(it.toDefinitionItem())
-            }
-
+            val definitionItems =  getDefinitions(term)
+            insertDefinitions(DefinitionItem.convertToDefinitionEntityList(definitionItems))
             definitionItems
+        } else {
+            DefinitionEntity.convertToDefinitionItemList(definitions.value!!)
         }
 
     }
@@ -31,13 +29,21 @@ class RepositoryDefinitions(private val daoDefinitions: DaoDefinitionItem) : Rem
         return try {
             // this will run on a thread managed by Retrofit
             val listResult = getTermsDeferred.await()
-            Log.d(TAG, "we got a list from the server: ${listResult.list.size}")
-
             listResult.list
 
         } catch (e: Exception) {
             Log.d(TAG, "Stacktrace", e)
             emptyList()
+        }
+    }
+
+    private suspend fun insertDefinitions(list: List<DefinitionEntity>) {
+        try {
+            withContext(Dispatchers.IO) {
+                daoDefinitions.insertAll(list)
+            }
+        } catch (error: Exception) {
+            throw Exception(error.localizedMessage)
         }
     }
 }
