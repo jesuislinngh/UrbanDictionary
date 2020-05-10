@@ -19,20 +19,36 @@ data class DefinitionEntity (@PrimaryKey @ColumnInfo(name = "word") val word: St
                              val current_vote: String,
                              val written_on: String,
                              val example: String,
-                             val thumbs_down: String = "0") : Parcelable
+                             val thumbs_down: String = "0") : Parcelable {
+    companion object {
+        private fun toDefinitionItem(entity: DefinitionEntity) = DefinitionItem(
+            word = entity.word,
+            definition = entity.definition,
+            permalink = entity.permalink,
+            thumbs_up = entity.thumbs_up,
+            sound_urls = entity.sound_urls.split(","),
+            author = entity.author,
+            defid = entity.defid,
+            current_vote = entity.current_vote,
+            written_on = entity.written_on,
+            example = entity.example,
+            thumbs_down = entity.thumbs_down)
 
-fun DefinitionEntity.toDefinitionItem() = DefinitionItem(
-    word = word,
-    definition = definition,
-    permalink = permalink,
-    thumbs_up = thumbs_up,
-    sound_urls = listOf(sound_urls),
-    author = author,
-    defid = defid,
-    current_vote = current_vote,
-    written_on = written_on,
-    example = example,
-    thumbs_down = thumbs_down)
+        fun convertToDefinitionItemList(list: List<DefinitionEntity>) : List<DefinitionItem> {
+            val definitionItem = mutableListOf<DefinitionItem>()
+
+            list.forEach {
+                definitionItem.add(toDefinitionItem(it))
+            }
+
+            return definitionItem
+        }
+    }
+}
+
+
+
+
 
 @Parcelize
 data class DefinitionList(
@@ -52,4 +68,29 @@ data class DefinitionItem(
     val written_on: String,
     val example: String,
     val thumbs_down: String = "0"
-) : Parcelable
+) : Parcelable {
+    companion object {
+        private fun toDefinitionEntity(item: DefinitionItem) = DefinitionEntity(
+            word = item.word,
+            definition = item.definition,
+            permalink = item.permalink,
+            thumbs_up = item.thumbs_up,
+            sound_urls = item.sound_urls.toString(),
+            author = item.author,
+            defid = item.defid,
+            current_vote = item.current_vote,
+            written_on = item.written_on,
+            example = item.example,
+            thumbs_down = item.thumbs_down)
+
+        fun convertToDefinitionEntityList(list: List<DefinitionItem>) : List<DefinitionEntity> {
+            val definitionEntity = mutableListOf<DefinitionEntity>()
+
+            list.forEach {
+                definitionEntity.add(toDefinitionEntity(it))
+            }
+
+            return definitionEntity
+        }
+    }
+}
