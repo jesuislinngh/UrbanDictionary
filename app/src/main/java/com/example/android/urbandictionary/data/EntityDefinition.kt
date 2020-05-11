@@ -12,14 +12,14 @@ import kotlinx.android.parcel.Parcelize
 data class DefinitionEntity (val word: String,
                              val definition: String,
                              val permalink: String,
-                             val thumbs_up: String = "0",
+                             val thumbs_up: Int,
                              val sound_urls: String,
                              val author: String,
                              @PrimaryKey @ColumnInfo(name = "defid") val defid: Int,
                              val current_vote: String,
                              val written_on: String,
                              val example: String,
-                             val thumbs_down: String = "0") : Parcelable {
+                             val thumbs_down: Int) : Parcelable {
     companion object {
         private fun toDefinitionItem(entity: DefinitionEntity) = DefinitionItem(
             word = entity.word,
@@ -59,7 +59,7 @@ data class DefinitionList(
 data class DefinitionItem(
     val definition: String,
     val permalink: String,
-    val thumbs_up: String = "0",
+    val thumbs_up: Int,
     val sound_urls: List<String>,
     val author: String,
     val word: String,
@@ -67,7 +67,7 @@ data class DefinitionItem(
     val current_vote: String,
     val written_on: String,
     val example: String,
-    val thumbs_down: String = "0"
+    val thumbs_down: Int
 ) : Parcelable {
     companion object {
         private fun toDefinitionEntity(item: DefinitionItem) = DefinitionEntity(
