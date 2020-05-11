@@ -32,7 +32,8 @@ class ViewModelSearch(application: Application) : AndroidViewModel(application) 
 
 
     init {
-        val daoDefinition = DataBaseDefinitions.getDatabase(application, viewModelScope).daoDefinition()
+        val daoDefinition =
+            DataBaseDefinitions.getDatabase(application, viewModelScope).daoDefinition()
         repository = RepositoryDefinitions(daoDefinition)
     }
 
@@ -104,7 +105,7 @@ class ViewModelSearch(application: Application) : AndroidViewModel(application) 
     }
 
     // this is a repetitive task
-    private fun startProcess(block: suspend () -> Unit) : Job {
+    private fun startProcess(block: suspend () -> Unit): Job {
         return viewModelScope.launch {
             try {
                 _searching.value = true
@@ -115,5 +116,12 @@ class ViewModelSearch(application: Application) : AndroidViewModel(application) 
                 _searching.value = false
             }
         }
+    }
+
+    fun orderTermsByThumbs(thumbUp: Boolean) {
+        _definitions.value =
+            _definitions.value?.sortedWith(
+                compareByDescending { if (thumbUp) it.thumbs_up else it.thumbs_down }
+            )
     }
 }
