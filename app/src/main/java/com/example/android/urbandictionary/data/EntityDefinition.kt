@@ -9,13 +9,13 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "definitions_table")
-data class DefinitionEntity (@PrimaryKey @ColumnInfo(name = "word") val word: String,
+data class DefinitionEntity (val word: String,
                              val definition: String,
                              val permalink: String,
                              val thumbs_up: String = "0",
                              val sound_urls: String,
                              val author: String,
-                             val defid: Int,
+                             @PrimaryKey @ColumnInfo(name = "defid") val defid: Int,
                              val current_vote: String,
                              val written_on: String,
                              val example: String,
